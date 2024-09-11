@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 12345
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+    show-sql: true
+
+#camunda.bpm:
+#  admin-user:
+#    id: demo
+#    password: demo
+#    firstName: Demo
+#  filter:
+#    create: All tasks
