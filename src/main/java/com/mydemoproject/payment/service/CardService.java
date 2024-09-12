@@ -51,6 +51,7 @@ public class CardService {
         return " Your card: " + newCard;
     }
 
+    @Transactional
     public void transferCard(
              Long debitorId
             ,Long creditorId
@@ -104,7 +105,8 @@ public class CardService {
     }
 
 
-    //
+    // PRIVATE METHODS
+
     private BigDecimal totalBalance(BigDecimal amount, BigDecimal balance) {
         BigDecimal total = balance.add(amount);
         return total;

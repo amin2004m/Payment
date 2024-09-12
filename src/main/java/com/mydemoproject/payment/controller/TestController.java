@@ -24,10 +24,9 @@ public class TestController {
                       @RequestParam String password) {
 
         Map<String, Object> variables = new HashMap<>();
-//        variables.put("action",action);
+        variables.put("action",action);
         variables.put("username", username);
         variables.put("password", password);
-        variables.put("action", "login");
         ProcessInstance processInstance =
                 runtimeService.startProcessInstanceByKey("Process_0c4b5k4", variables);
 
