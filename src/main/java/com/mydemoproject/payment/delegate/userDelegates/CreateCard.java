@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CreateCard implements JavaDelegate {
 
-
     @Override
     public void execute(DelegateExecution execution) {
 
@@ -19,4 +18,5 @@ public class CreateCard implements JavaDelegate {
 
         log.info("Card was Created");
     }
+
 }

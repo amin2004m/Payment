@@ -35,11 +35,11 @@ public class UserController {
     @GetMapping("/login")
     public UserResponse login(@Valid @RequestParam String username, @RequestParam String password) {
         log.info("Login successful");
-//        String action = "login";
+        String action = "login";
         runtimeService.createProcessInstanceByKey("LoginProcess")
                 .setVariable("username", username)
                 .setVariable("password", password)
-                .setVariable("action", "login")
+                .setVariable("action", action)
                 .execute();
 
         return userService.login(username, password);
@@ -47,9 +47,9 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUserById(@Valid   @PathVariable Long id) {
+    public void deleteUserById(@Valid @PathVariable Long id) {
         String action = "delete";
-        runtimeService.startProcessInstanceByKey("LoginProcess",action);
+        runtimeService.startProcessInstanceByKey("LoginProcess", action);
         userService.deleteUserById(id);
     }
 

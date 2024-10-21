@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Component("CheckDebitorId")
 @RequiredArgsConstructor
 public class CheckDebitorIdDelegate implements JavaDelegate {
+
    private final CardRepository cardRepository;
 
     @Override
@@ -21,6 +22,6 @@ public class CheckDebitorIdDelegate implements JavaDelegate {
         log.info("Check Debitor Id Delegate was started");
         Card debitorCard = cardRepository.findById(debitorId).orElseThrow(() ->
                 new UserNotFoundException("Debitor Not Found"));
-
     }
+
 }

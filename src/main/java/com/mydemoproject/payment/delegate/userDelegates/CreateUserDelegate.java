@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CreateUserDelegate implements JavaDelegate {
 
-    private final UserController userController;
-
     @Override
     public void execute(DelegateExecution execution) {
         UserRequest userRequest = new UserRequest();
@@ -25,7 +23,7 @@ public class CreateUserDelegate implements JavaDelegate {
         userRequest.setDocFin((String) execution.getVariable("docFin"));
         userRequest.setPhoneNumber((String) execution.getVariable("phoneNumber"));
 
-//        userController.createUser(userRequest);
+
     }
 
 

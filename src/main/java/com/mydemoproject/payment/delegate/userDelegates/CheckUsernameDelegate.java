@@ -23,4 +23,5 @@ public class CheckUsernameDelegate implements JavaDelegate {
         }
 
     }
+
 }

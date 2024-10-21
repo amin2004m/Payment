@@ -12,15 +12,12 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class TransferDelegate implements JavaDelegate {
 
-    private final CardController cardController;
-
     @Override
     public void execute(DelegateExecution execution) {
         Long debitorId = (Long) execution.getVariable("debitorId");
         Long creditorId = (Long) execution.getVariable("creditorId");
         BigDecimal amount = (BigDecimal) execution.getVariable("amount");
 
-//        cardController.transferCard(debitorId,creditorId,amount);
 
     }
 }

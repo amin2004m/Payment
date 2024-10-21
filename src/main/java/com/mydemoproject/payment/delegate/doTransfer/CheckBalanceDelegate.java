@@ -25,19 +25,17 @@ public class CheckBalanceDelegate implements JavaDelegate {
             boolean balanceCheck = false;
             BigDecimal balance = cardController.checkBalance(cardId);
 
-            if(amount.compareTo(balance)>0){
+            if (amount.compareTo(balance) > 0) {
                 balanceCheck = true;
             }
 
             execution.setVariable("balance", balance);
             log.info("Balance check successful for cardId: {}", cardId);
 
-
-
-            execution.setVariable("balanceCheck",balanceCheck);
+            execution.setVariable("balanceCheck", balanceCheck);
         } catch (Exception e) {
             log.error("Error during balance check for cardId: {}", cardId, e);
-            execution.setVariable("balanceCheck",false);
+            execution.setVariable("balanceCheck", false);
         }
     }
 

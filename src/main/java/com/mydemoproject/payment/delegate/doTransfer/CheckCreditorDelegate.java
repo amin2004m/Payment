@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Component("CheckCreditorId")
 @RequiredArgsConstructor
 public class CheckCreditorDelegate implements JavaDelegate {
+
     private final CardRepository cardRepository;
 
     @Override

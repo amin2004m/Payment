@@ -27,5 +27,4 @@ public class Card {
     @JoinColumn(name = "userId")
     User user;
 
-
 }

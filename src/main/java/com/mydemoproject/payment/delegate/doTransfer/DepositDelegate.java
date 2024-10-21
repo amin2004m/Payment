@@ -14,8 +14,6 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class DepositDelegate implements JavaDelegate {
 
-    private final CardController cardController;
-
     @Override
     public void execute(DelegateExecution execution) {
         Long cardId = (Long) execution.getVariable("cardId");
@@ -23,15 +21,7 @@ public class DepositDelegate implements JavaDelegate {
         BigDecimal balance = (BigDecimal) execution.getVariable("balance");
         String cardNumber = (String) execution.getVariable("cardNumber");
 
-//        cardController.deposit(cardId,amount,balance,cardNumber);
         log.info("Deposit delegate init");
-//        try {
-//            BigDecimal updatedBalance = cardService.depositToCard(cardId, amount, balance, cardNumber);
-//            execution.setVariable("updatedBalance", updatedBalance);
-//            log.info("Deposit successful for cardId: {}", cardId);
-//        } catch (Exception e) {
-//            log.error("Error during deposit for cardId: {}", cardId, e);
-//            throw new RuntimeException("Error during deposit", e);
-//        }
     }
+
 }

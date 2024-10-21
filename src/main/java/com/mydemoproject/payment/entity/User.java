@@ -31,9 +31,6 @@ public class User {
     String docFin;
     String phoneNumber;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    List<Transaction> transactions;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Card> cards;
 

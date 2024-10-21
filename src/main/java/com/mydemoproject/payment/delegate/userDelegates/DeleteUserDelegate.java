@@ -10,13 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DeleteUserDelegate implements JavaDelegate {
 
-    private final UserController userController;
 
     @Override
     public void execute(DelegateExecution execution) {
 
         Long userId = (Long) execution.getVariable("userId");
 
-//        userController.deleteUserById(userId);
     }
 }

@@ -17,8 +17,6 @@ public class CardRequest {
     Long cardId;
     String cardNumber;
     BigDecimal balance;
-
     Long userId;
-
     User user;
 }

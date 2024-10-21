@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @Component("WithdrawDelegate")
 @RequiredArgsConstructor
 public class WithdrawDelegate implements JavaDelegate {
-    private final CardController cardController;
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -22,9 +21,6 @@ public class WithdrawDelegate implements JavaDelegate {
         BigDecimal balance = (BigDecimal) execution.getVariable("balance");
 
         try {
-//            CardResponse response =
-//                    cardController.withdraw(cardId, amount, balance);
-//            execution.setVariable("transactionResponse", response);
             log.info("Withdrawal successful for cardId: {}", cardId);
         } catch (Exception e) {
             log.error("Error during withdrawal for cardId: {}", cardId, e);
