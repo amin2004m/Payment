@@ -1,6 +1,6 @@
-package com.mydemoproject.payment.delegate;
+package com.mydemoproject.payment.delegate.doTransfer;
 
-import com.mydemoproject.payment.service.CardService;
+import com.mydemoproject.payment.controller.CardController;
 import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class TransferDelegate implements JavaDelegate {
 
-    private final CardService cardId;
+    private final CardController cardController;
 
     @Override
     public void execute(DelegateExecution execution) {
@@ -20,6 +20,7 @@ public class TransferDelegate implements JavaDelegate {
         Long creditorId = (Long) execution.getVariable("creditorId");
         BigDecimal amount = (BigDecimal) execution.getVariable("amount");
 
-        cardId.transferCard(debitorId, creditorId, amount);
+//        cardController.transferCard(debitorId,creditorId,amount);
+
     }
 }

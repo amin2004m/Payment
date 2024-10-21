@@ -1,6 +1,7 @@
 package com.mydemoproject.payment.service;
 
 
+import com.mydemoproject.payment.dto.request.CardRequest;
 import com.mydemoproject.payment.dto.response.CardResponse;
 import com.mydemoproject.payment.entity.Card;
 import com.mydemoproject.payment.entity.User;
@@ -17,13 +18,13 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Random;
 
+
 @Service
 @RequiredArgsConstructor
 public class CardService {
 
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
-    User user = new User();
 
 
     public String generateCard() {
@@ -53,9 +54,9 @@ public class CardService {
 
     @Transactional
     public void transferCard(
-             Long debitorId
-            ,Long creditorId
-            ,BigDecimal amount) {
+              Long debitorId
+            , Long creditorId
+            , BigDecimal amount) {
 
         Card debitorCard = cardRepository.findById(debitorId).orElseThrow(() ->
                 new UserNotFoundException("Debitor Not Found"));
@@ -66,35 +67,43 @@ public class CardService {
         if (debitorCard.getBalance().compareTo(amount) < 0) {
             throw new NotEnoughBalanceException("Insufficient balance for transfer");
         }
+
         debitorCard.setBalance(debitorCard.getBalance().subtract(amount));
-        debitorCard.setUser(user);
         creditorCard.setBalance(creditorCard.getBalance().add(amount));
 
+        cardRepository.save(debitorCard);
+        cardRepository.save(creditorCard);
 
         System.err.println("Transfer Successful");
     }
 
-    @Transactional
-    public BigDecimal depositToCard(Long cardId, BigDecimal amount, BigDecimal balance) {
+    public BigDecimal depositToCard(Long cardId, BigDecimal amount, BigDecimal balance, String cardNumber) {
         Card byId = cardRepository.findById(cardId).orElseThrow(() ->
                 new UserNotFoundException("Card not found"));
 
-        doTransaction(cardId, amount);
-        var newBalance = balance.add(amount);
+        BigDecimal newBalance = balance.add(amount);
+        byId.setCardId(cardId);
+        byId.setBalance(newBalance);
+        byId.setCardNumber(cardNumber);
 
+        cardRepository.save(byId);
         System.err.println("Successful");
         return newBalance;
     }
 
     public CardResponse withdraw(Long cardId, BigDecimal amount, BigDecimal balance) {
-        Card card = cardRepository.findById(cardId).orElseThrow(() ->
-                new UserNotFoundException("Card not found !"));
-        checkEnoughBalance(balance, amount);
+        CardRequest cardRequest = new CardRequest();
+        CardMapper.mapToEntity(cardRequest);
 
-        card.setBalance(balance.add(amount));
-        card.setCardNumber(card.getCardNumber());
-        card.setUser(card.getUser());
-        return CardMapper.mapToResponse(card);
+        var findCARD =cardRepository.findById(cardId).orElseThrow(()->
+                new UserNotFoundException("Card not found." +
+                        "LINE 100"));
+        if (findCARD!=null){
+            checkEnoughBalance(balance,amount);
+            findCARD.setBalance(balance.subtract(amount));
+            cardRepository.save(findCARD);
+        }
+        return null;
     }
 
     public BigDecimal CheckBalance(Long cardId) {
@@ -119,14 +128,16 @@ public class CardService {
         }
     }
 
-    private Card doTransaction(Long accountId, BigDecimal amount) {
-
-        BigDecimal newAmount = amount.subtract(BigDecimal.ONE);
-
-        Card withdraw = new Card();
-        withdraw.setCardId(accountId);
-        withdraw.setBalance(newAmount);
-        withdraw.setUser(user);
-        return cardRepository.save(withdraw);
-    }
+//    private Card doTransaction(Long accountId, BigDecimal amount, BigDecimal balance, String cardNumber) {
+//
+//        BigDecimal newAmount = balance.add(amount);
+//        User user = new User();
+//
+//        Card withdraw = new Card();
+//        withdraw.setCardId(accountId);
+//        withdraw.setBalance(newAmount);
+//        withdraw.setUser(user);
+//        withdraw.setCardNumber(cardNumber);
+//        return cardRepository.save(withdraw);
+//    }
 }

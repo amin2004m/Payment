@@ -7,8 +7,7 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("v1/cards")
@@ -21,8 +20,13 @@ public class CardController {
     @PostMapping("create")
     public String createCard(@RequestParam Long id,
                              @RequestParam String username,
-                             @RequestParam String password) {
+                             @RequestParam String password
+    ) {
 
+        String action = "createCard";
+
+        runtimeService.createProcessInstanceByKey("registerProcess")
+                .setVariable("action", action);
         return cardService.createCard(id, username, password);
     }
 
@@ -30,54 +34,44 @@ public class CardController {
     public void transferCard(@RequestParam Long debitorId,
                              @RequestParam Long creditorId,
                              @RequestParam BigDecimal amount) {
+        String action = "transfer";
 
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("debitorId", debitorId);
-        variables.put("creditorId",creditorId);
-        variables.put("amount",amount);
-        variables.put("action", "transfer");
-        runtimeService.startProcessInstanceByKey("Process_0c4b5k4", variables);
-
+        runtimeService.createProcessInstanceByKey("doTransfer")
+                .setVariable("action", action);
         cardService.transferCard(debitorId, creditorId, amount);
     }
 
     @PostMapping("/deposit")
     public BigDecimal deposit(@RequestParam Long cardId,
                               @RequestParam BigDecimal amount,
-                              @RequestParam BigDecimal balance) {
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("cardId", cardId);
-        variables.put("amount", amount);
-        variables.put("balance",balance);
-        variables.put("action", "deposit");
+                              @RequestParam BigDecimal balance,
+                              @RequestParam String cardNumber) {
 
-        runtimeService.startProcessInstanceByKey("Process_0c4b5k4", variables);
+        String action = "deposit";
+        runtimeService.createProcessInstanceByKey("doTransfer")
+                .setVariable("action", action);
 
-        return cardService.depositToCard(cardId, amount, balance);
+        return cardService.depositToCard(cardId, amount, balance, cardNumber);
     }
 
     @PostMapping("/withdraw")
     public CardResponse withdraw(@RequestParam Long cardId,
                                  @RequestParam BigDecimal amount,
                                  @RequestParam BigDecimal balance) {
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("cardId", cardId);
-        variables.put("amount", amount);
-        variables.put("balance",balance);
-        variables.put("action", "withdraw");
 
-        runtimeService.startProcessInstanceByKey("Process_0c4b5k4", variables);
+        String action = "withdraw";
+        runtimeService.createProcessInstanceByKey("doTransfer")
+                .setVariable("action", action);
 
         return cardService.withdraw(cardId, amount, balance);
     }
 
     @PostMapping("/checkbalance/{cardId}")
-    public BigDecimal checkBalance(@PathVariable Long cardId){
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("cardId", cardId);
-        variables.put("action","checkBalance");
-        runtimeService.startProcessInstanceByKey("Process_0c4b5k4", variables);
+    public BigDecimal checkBalance(@PathVariable Long cardId) {
 
+        String action = "checkBalance";
+        runtimeService.createProcessInstanceByKey("doTransfer")
+                .setVariable("action", action);
 
         return cardService.CheckBalance(cardId);
     }

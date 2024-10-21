@@ -19,7 +19,4 @@ public class UserResponse {
     String email;
     String docFin;
     String phoneNumber;
-
-
-
 }

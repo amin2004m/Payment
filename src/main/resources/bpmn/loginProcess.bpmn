@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1xpdazg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.24.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="LoginProcess" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1tpak3l</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_1obxw6l" name="Login" default="Flow_1kobvgg" camunda:delegateExpression="${LoginUserDelegate}">
+      <bpmn:incoming>Flow_049dl0s</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kobvgg</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_1m3ybpu" default="Flow_0crfouk">
+      <bpmn:incoming>Flow_1tpak3l</bpmn:incoming>
+      <bpmn:outgoing>Flow_049dl0s</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0crfouk</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1tpak3l" sourceRef="StartEvent_1" targetRef="Gateway_1m3ybpu" />
+    <bpmn:sequenceFlow id="Flow_049dl0s" sourceRef="Gateway_1m3ybpu" targetRef="Activity_1obxw6l">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action=="login"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0crfouk" sourceRef="Gateway_1m3ybpu" targetRef="Event_03lkt5n" />
+    <bpmn:endEvent id="Event_03lkt5n">
+      <bpmn:incoming>Flow_0crfouk</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0c3lkoo" errorRef="Error_1k213pz" />
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_0sx37ek" default="Flow_0hb8kj9">
+      <bpmn:incoming>Flow_1kobvgg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0j1n1cw</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0hb8kj9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1kobvgg" sourceRef="Activity_1obxw6l" targetRef="Gateway_0sx37ek" />
+    <bpmn:task id="Activity_136qr13" name="DeleteUser">
+      <bpmn:incoming>Flow_0j1n1cw</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0j1n1cw" sourceRef="Gateway_0sx37ek" targetRef="Activity_136qr13">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action=="delete"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_1shqorp">
+      <bpmn:incoming>Flow_0hb8kj9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0hb8kj9" sourceRef="Gateway_0sx37ek" targetRef="Event_1shqorp" />
+  </bpmn:process>
+  <bpmn:error id="Error_1k213pz" name="Error_0tbk513" errorCode="404" camunda:errorMessage="User Not found" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="LoginProcess">
+      <bpmndi:BPMNShape id="Activity_19q3nv4_di" bpmnElement="Activity_1obxw6l">
+        <dc:Bounds x="500" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1m3ybpu_di" bpmnElement="Gateway_1m3ybpu" isMarkerVisible="true">
+        <dc:Bounds x="325" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_18jm089_di" bpmnElement="Event_03lkt5n">
+        <dc:Bounds x="502" y="212" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0sx37ek_di" bpmnElement="Gateway_0sx37ek" isMarkerVisible="true">
+        <dc:Bounds x="725" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_136qr13_di" bpmnElement="Activity_136qr13">
+        <dc:Bounds x="700" y="190" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1shqorp_di" bpmnElement="Event_1shqorp">
+        <dc:Bounds x="902" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_049dl0s_di" bpmnElement="Flow_049dl0s">
+        <di:waypoint x="375" y="117" />
+        <di:waypoint x="500" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tpak3l_di" bpmnElement="Flow_1tpak3l">
+        <di:waypoint x="188" y="117" />
+        <di:waypoint x="325" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0crfouk_di" bpmnElement="Flow_0crfouk">
+        <di:waypoint x="350" y="142" />
+        <di:waypoint x="350" y="230" />
+        <di:waypoint x="502" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kobvgg_di" bpmnElement="Flow_1kobvgg">
+        <di:waypoint x="600" y="117" />
+        <di:waypoint x="725" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j1n1cw_di" bpmnElement="Flow_0j1n1cw">
+        <di:waypoint x="750" y="142" />
+        <di:waypoint x="750" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hb8kj9_di" bpmnElement="Flow_0hb8kj9">
+        <di:waypoint x="775" y="117" />
+        <di:waypoint x="902" y="117" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,9 +1,7 @@
-package com.mydemoproject.payment.delegate;
+package com.mydemoproject.payment.delegate.userDelegates;
 
+import com.mydemoproject.payment.controller.UserController;
 import com.mydemoproject.payment.dto.request.UserRequest;
-import com.mydemoproject.payment.dto.response.UserResponse;
-import com.mydemoproject.payment.entity.User;
-import com.mydemoproject.payment.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -12,10 +10,11 @@ import org.springframework.stereotype.Component;
 @Component("CreateUserDelegate")
 @RequiredArgsConstructor
 public class CreateUserDelegate implements JavaDelegate {
-    private final UserService userService;
+
+    private final UserController userController;
 
     @Override
-    public void execute(DelegateExecution execution) throws Exception {
+    public void execute(DelegateExecution execution) {
         UserRequest userRequest = new UserRequest();
         userRequest.setFirstName((String) execution.getVariable("firstName"));
         userRequest.setUsername((String) execution.getVariable("username"));
@@ -26,7 +25,7 @@ public class CreateUserDelegate implements JavaDelegate {
         userRequest.setDocFin((String) execution.getVariable("docFin"));
         userRequest.setPhoneNumber((String) execution.getVariable("phoneNumber"));
 
-        userService.createUser(userRequest);
+//        userController.createUser(userRequest);
     }
 
 
