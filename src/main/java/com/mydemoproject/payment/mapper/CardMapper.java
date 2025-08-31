@@ -1,6 +1,5 @@
 package com.mydemoproject.payment.mapper;
 
-
 import com.mydemoproject.payment.dto.request.CardRequest;
 import com.mydemoproject.payment.dto.response.CardResponse;
 import com.mydemoproject.payment.entity.Card;

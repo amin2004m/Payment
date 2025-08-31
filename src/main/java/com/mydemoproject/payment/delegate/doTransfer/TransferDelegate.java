@@ -1,6 +1,5 @@
 package com.mydemoproject.payment.delegate.doTransfer;
 
-import com.mydemoproject.payment.controller.CardController;
 import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;

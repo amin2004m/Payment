@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 @Slf4j
-    @Component("DepositDelegate")
+@Component("DepositDelegate")
 @RequiredArgsConstructor
 public class DepositDelegate implements JavaDelegate {
 

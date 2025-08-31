@@ -22,7 +22,6 @@ public class CardController {
                              @RequestParam String username,
                              @RequestParam String password
     ) {
-
         String action = "createCard";
 
         runtimeService.createProcessInstanceByKey("registerProcess")
@@ -66,7 +65,7 @@ public class CardController {
         return cardService.withdraw(cardId, amount, balance);
     }
 
-    @PostMapping("/checkbalance/{cardId}")
+    @GetMapping("/checkbalance/{cardId}")
     public BigDecimal checkBalance(@PathVariable Long cardId) {
 
         String action = "checkBalance";

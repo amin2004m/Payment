@@ -16,7 +16,7 @@ public class UserDtoMapper {
 
     public static User mapToUserEntity(UserRequest userRequest) {
 
-        User user = User.builder()
+        return User.builder()
                 .userId(userRequest.getUserId())
                 .firstName(userRequest.getFirstName())
                 .surname(userRequest.getSurname())
@@ -37,7 +37,6 @@ public class UserDtoMapper {
                                 .collect(Collectors.toList()) : Collections.emptyList())
                 .build();
 
-        return user;
     }
 
     public static UserResponse mapToUserResponse(User user) {
