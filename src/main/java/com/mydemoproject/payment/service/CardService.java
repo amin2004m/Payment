@@ -5,12 +5,14 @@ import com.mydemoproject.payment.dto.request.CardRequest;
 import com.mydemoproject.payment.dto.response.CardResponse;
 import com.mydemoproject.payment.entity.Card;
 import com.mydemoproject.payment.entity.User;
+import com.mydemoproject.payment.exceptions.CardNotFoundException;
 import com.mydemoproject.payment.exceptions.NotEnoughBalanceException;
 import com.mydemoproject.payment.exceptions.UserNotFoundException;
 import com.mydemoproject.payment.mapper.CardMapper;
 import com.mydemoproject.payment.repository.CardRepository;
 import com.mydemoproject.payment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,9 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Random;
 
+import static com.mydemoproject.payment.exceptions.ErrorEnum.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CardService {
@@ -54,18 +58,18 @@ public class CardService {
 
     @Transactional
     public void transferCard(
-              Long debitorId
+            Long debitorId
             , Long creditorId
             , BigDecimal amount) {
 
         Card debitorCard = cardRepository.findById(debitorId).orElseThrow(() ->
-                new UserNotFoundException("Debitor Not Found"));
+                new UserNotFoundException(USER_NOT_FOUND.getErrorMessage()));
 
         Card creditorCard = cardRepository.findById(creditorId).orElseThrow(() ->
-                new UserNotFoundException("Creditor Not Found"));
+                new UserNotFoundException(CREDITOR_NOT_FOUND.getErrorMessage()));
 
         if (debitorCard.getBalance().compareTo(amount) < 0) {
-            throw new NotEnoughBalanceException("Insufficient balance for transfer");
+            throw new NotEnoughBalanceException(NOT_ENOUGH_BALANCE.getErrorMessage());
         }
 
         debitorCard.setBalance(debitorCard.getBalance().subtract(amount));
@@ -74,12 +78,12 @@ public class CardService {
         cardRepository.save(debitorCard);
         cardRepository.save(creditorCard);
 
-        System.err.println("Transfer Successful");
+        log.info("Transfer Successful");
     }
 
     public BigDecimal depositToCard(Long cardId, BigDecimal amount, BigDecimal balance, String cardNumber) {
         Card byId = cardRepository.findById(cardId).orElseThrow(() ->
-                new UserNotFoundException("Card not found"));
+                new CardNotFoundException(CARD_NOT_FOUND.getErrorMessage()));
 
         BigDecimal newBalance = balance.add(amount);
         byId.setCardId(cardId);
@@ -87,7 +91,7 @@ public class CardService {
         byId.setCardNumber(cardNumber);
 
         cardRepository.save(byId);
-        System.err.println("Successful");
+        log.info("Successful transaction: " + newBalance);
         return newBalance;
     }
 
@@ -95,11 +99,10 @@ public class CardService {
         CardRequest cardRequest = new CardRequest();
         CardMapper.mapToEntity(cardRequest);
 
-        var findCARD =cardRepository.findById(cardId).orElseThrow(()->
-                new UserNotFoundException("Card not found." +
-                        "LINE 100"));
-        if (findCARD!=null){
-            checkEnoughBalance(balance,amount);
+        var findCARD = cardRepository.findById(cardId).orElseThrow(() ->
+                new CardNotFoundException(CARD_NOT_FOUND.getErrorMessage()));
+        if (findCARD != null) {
+            checkEnoughBalance(balance, amount);
             findCARD.setBalance(balance.subtract(amount));
             cardRepository.save(findCARD);
         }
@@ -108,36 +111,16 @@ public class CardService {
 
     public BigDecimal CheckBalance(Long cardId) {
         var card = cardRepository.findById(cardId).orElseThrow(() ->
-                new UserNotFoundException("Card Not found"));
+                new CardNotFoundException(CARD_NOT_FOUND.getErrorMessage()));
         BigDecimal balance = card.getBalance();
         return balance;
     }
 
-
-    // PRIVATE METHODS
-
-    private BigDecimal totalBalance(BigDecimal amount, BigDecimal balance) {
-        BigDecimal total = balance.add(amount);
-        return total;
-    }
-
     private void checkEnoughBalance(BigDecimal currentBalance, BigDecimal amount) {
         if (currentBalance.compareTo(amount) < 0) {
-            System.out.println("Transaction Failed !");
-            throw new NotEnoughBalanceException("Balance is not enough");
+            log.info("Transaction Failed !");
+            throw new NotEnoughBalanceException(NOT_ENOUGH_BALANCE.getErrorMessage());
         }
     }
 
-//    private Card doTransaction(Long accountId, BigDecimal amount, BigDecimal balance, String cardNumber) {
-//
-//        BigDecimal newAmount = balance.add(amount);
-//        User user = new User();
-//
-//        Card withdraw = new Card();
-//        withdraw.setCardId(accountId);
-//        withdraw.setBalance(newAmount);
-//        withdraw.setUser(user);
-//        withdraw.setCardNumber(cardNumber);
-//        return cardRepository.save(withdraw);
-//    }
 }
